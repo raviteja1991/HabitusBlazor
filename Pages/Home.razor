@@ -1,0 +1,147 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link @(currentTab == "english" ? "active" : "")" 
+                                    @onclick='() => SwitchTab("english")'>
+                                English
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link @(currentTab == "italian" ? "active" : "")" 
+                                    @onclick='() => SwitchTab("italian")'>
+                                Italiano
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    @if (currentTab == "english")
+                    {
+                        <div class="tab-content">
+                            <h1>Component Hierarchy Test</h1>
+                            
+                            <p>This test demonstrates a three-level component hierarchy with the following functionality:</p>
+                            
+                            <ul>
+                                <li><b>Parent Component (Level 1):</b>
+                                    <ul>
+                                        <li>Contains a numeric input and update button</li>
+                                        <li>When update is clicked, all child components receive the new value</li>
+                                        <li>Displays a current value that updates from any level</li>
+                                    </ul>
+                                </li>
+                                
+                                <li><b>Second Level Components:</b>
+                                    <ul>
+                                        <li>Six instances displayed in a grid</li>
+                                        <li>Each acts as a container for a third-level component</li>
+                                    </ul>
+                                </li>
+                                
+                                <li><b>Third Level Components:</b>
+                                    <ul>
+                                        <li>Each contains its own numeric input and update button</li>
+                                        <li>Maintains its own local value independently</li>
+                                        <li>When updated, only changes the parent's (level 1) display value</li>
+                                        <li>Retains its value even when parent updates other components</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                            <h2>Test Cases</h2>
+                            <ol>
+                                <li>Parent Update:
+                                    <ul>
+                                        <li>Enter a number in parent input</li>
+                                        <li>Click "Update All"</li>
+                                        <li>Verify all child components update</li>
+                                    </ul>
+                                </li>
+                                
+                                <li>Child Update:
+                                    <ul>
+                                        <li>Enter different numbers in child components</li>
+                                        <li>Click individual update buttons</li>
+                                        <li>Verify only parent display changes</li>
+                                        <li>Verify other child components retain their values</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="tab-content">
+                            <h1>Test della Gerarchia dei Componenti</h1>
+                            
+                            <p>Questo test dimostra una gerarchia di componenti a tre livelli con le seguenti funzionalità:</p>
+                            
+                            <ul>
+                                <li><b>Componente Genitore (Livello 1):</b>
+                                    <ul>
+                                        <li>Contiene un input numerico e un pulsante di aggiornamento</li>
+                                        <li>Quando si clicca su aggiorna, tutti i componenti figli ricevono il nuovo valore</li>
+                                        <li>Mostra un valore corrente che si aggiorna da qualsiasi livello</li>
+                                    </ul>
+                                </li>
+                                
+                                <li><b>Componenti di Secondo Livello:</b>
+                                    <ul>
+                                        <li>Sei istanze visualizzate in una griglia</li>
+                                        <li>Ognuna funge da contenitore per un componente di terzo livello</li>
+                                    </ul>
+                                </li>
+                                
+                                <li><b>Componenti di Terzo Livello:</b>
+                                    <ul>
+                                        <li>Ognuno contiene il proprio input numerico e pulsante di aggiornamento</li>
+                                        <li>Mantiene il proprio valore locale in modo indipendente</li>
+                                        <li>Quando aggiornato, modifica solo il valore visualizzato del genitore (livello 1)</li>
+                                        <li>Mantiene il proprio valore anche quando il genitore aggiorna altri componenti</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        
+                            <h2>Casi di Test</h2>
+                            <ol>
+                                <li>Aggiornamento Genitore:
+                                    <ul>
+                                        <li>Inserire un numero nell'input del genitore</li>
+                                        <li>Cliccare su "Aggiorna Tutto"</li>
+                                        <li>Verificare che tutti i componenti figli si aggiornino</li>
+                                    </ul>
+                                </li>
+                                
+                                <li>Aggiornamento Figlio:
+                                    <ul>
+                                        <li>Inserire numeri diversi nei componenti figli</li>
+                                        <li>Cliccare sui singoli pulsanti di aggiornamento</li>
+                                        <li>Verificare che solo il display del genitore cambi</li>
+                                        <li>Verificare che gli altri componenti figli mantengano i loro valori</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string currentTab = "english";
+
+    private void SwitchTab(string tab)
+    {
+        currentTab = tab;
+    }
+}
