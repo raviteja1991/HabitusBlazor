@@ -1,0 +1,47 @@
+﻿@namespace HabitusBlazor.Components
+@using HabitusBlazor.Services
+@inject StateService StateService
+
+<MudPaper Elevation="3" Class="pa-4 ma-2">
+    <MudText Typo="Typo.h6">Level 3 Component</MudText>
+
+    <MudNumericField @bind-Value="LocalValue"
+                     Label="Local Value"
+                     Variant="Variant.Outlined"
+                     Class="mt-3"
+                     Min="0"
+                     Adornment="Adornment.Start"
+                     AdornmentIcon="@Icons.Material.Filled.Tag" />
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               OnClick="UpdateParentValue"
+               Class="mt-3 mb-1">
+        Update Parent
+    </MudButton>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public int Value { get; set; }
+
+    private int LocalValue { get; set; }
+
+    // When the component receives a new parameter value
+    protected override void OnParametersSet()
+    {
+        // Only update the local value when the parent updates it
+        if (Value != LocalValue)
+        {
+            LocalValue = Value;
+        }
+
+        base.OnParametersSet();
+    }
+
+    private void UpdateParentValue()
+    {
+        // Update the parent's value through the state service
+        StateService.UpdateValue(LocalValue);
+    }
+}

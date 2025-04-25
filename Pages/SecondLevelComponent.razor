@@ -1,0 +1,15 @@
+﻿@namespace HabitusBlazor.Components
+
+<MudCard Elevation="2" Class="ma-2">
+    <MudCardHeader>
+        <MudText Typo="Typo.h5">Level 2 Component</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <ThirdLevelComponent Value="@Value" />
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    public int Value { get; set; }
+}

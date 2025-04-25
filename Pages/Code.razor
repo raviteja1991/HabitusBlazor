@@ -1,1 +1,79 @@
 ﻿@page "/code"
+@using HabitusBlazor.Services
+@inject StateService StateService
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudCard Elevation="4" Class="mb-4">
+        <MudCardHeader>
+            <MudText Typo="Typo.h4">Parent Component (Level 1)</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body1" Class="mb-3">Current Value: <b>@currentValue</b></MudText>
+
+            <MudNumericField @bind-Value="inputValue"
+                             Label="Set Value For All Children"
+                             Variant="Variant.Outlined"
+                             Min="0"
+                             Class="mb-3"
+                             Adornment="Adornment.Start"
+                             AdornmentIcon="@Icons.Material.Filled.Numbers" />
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="UpdateAllChildren"
+                       StartIcon="@Icons.Material.Filled.Update"
+                       Class="mb-3">
+                Update All
+            </MudButton>
+        </MudCardContent>
+    </MudCard>
+
+    <MudGrid>
+        @for (int i = 0; i < 6; i++)
+        {
+            <MudItem xs="12" sm="6" md="4">
+                <HabitusBlazor.Components.SecondLevelComponent Value="@childrenValues[i]" />
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private int inputValue = 0;
+    private int currentValue = 0;
+    private int[] childrenValues = new int[6] { 0, 0, 0, 0, 0, 0 };
+
+    protected override void OnInitialized()
+    {
+        // Subscribe to value changes from any child component
+        StateService.OnValueChanged += HandleValueChanged;
+        base.OnInitialized();
+    }
+
+    private void HandleValueChanged(int newValue)
+    {
+        // Update the current value when any child updates it
+        currentValue = newValue;
+        StateService.UpdateValue(newValue);
+        StateHasChanged();
+    }
+
+    private void UpdateAllChildren()
+    {
+        // Update all child values to match the input value
+        for (int i = 0; i < childrenValues.Length; i++)
+        {
+            childrenValues[i] = inputValue;
+        }
+
+        // Also update the current value
+        currentValue = inputValue;
+        StateService.UpdateValue(inputValue);
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe from the event to prevent memory leaks
+        StateService.OnValueChanged -= HandleValueChanged;
+    }
+}
