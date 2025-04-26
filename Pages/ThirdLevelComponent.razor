@@ -1,47 +1,54 @@
-﻿@namespace HabitusBlazor.Components
-@using HabitusBlazor.Services
-@inject StateService StateService
+﻿<div>
+    <MudPaper Elevation="3" Class="third-level-paper pa-4 ma-2" Style="background: #f5f3ef;">
 
-<MudPaper Elevation="3" Class="pa-4 ma-2">
-    <MudText Typo="Typo.h6">Level 3 Component</MudText>
+        <MudText Typo="Typo.body1" Class="third-level-text mb-3">Local Value: <b>@localValue</b></MudText>
 
-    <MudNumericField @bind-Value="LocalValue"
-                     Label="Local Value"
-                     Variant="Variant.Outlined"
-                     Class="mt-3"
-                     Min="0"
-                     Adornment="Adornment.Start"
-                     AdornmentIcon="@Icons.Material.Filled.Tag" />
+        <MudNumericField @bind-Value="localValue"
+                         Label="Local Value"
+                         Variant="Variant.Outlined"
+                         Class="mb-3"
+                         Min="0"
+                         Adornment="Adornment.Start"
+                         AdornmentIcon="@Icons.Material.Filled.Tag" />
 
-    <MudButton Variant="Variant.Filled"
-               Color="Color.Primary"
-               OnClick="UpdateParentValue"
-               Class="mt-3 mb-1">
-        Update Parent
-    </MudButton>
-</MudPaper>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   OnClick="UpdateParentValue"
+                   Class="mt-3 mb-1">
+            Update Parent
+        </MudButton>
+    </MudPaper>
+</div>
 
 @code {
     [Parameter]
     public int Value { get; set; }
 
-    private int LocalValue { get; set; }
+    [Parameter]
+    public int Index { get; set; }
 
-    // When the component receives a new parameter value
-    protected override void OnParametersSet()
+    [Parameter]
+    public EventCallback<(int, int)> OnLocalValueChanged { get; set; }
+
+    private int localValue { get; set; }
+
+    protected override void OnInitialized()
     {
-        // Only update the local value when the parent updates it
-        if (Value != LocalValue)
-        {
-            LocalValue = Value;
-        }
+        localValue = Value;
+        base.OnInitialized();
+    }
 
+     protected override void OnParametersSet()
+    {
+        localValue = Value;
         base.OnParametersSet();
     }
 
-    private void UpdateParentValue()
+    private async Task UpdateParentValue()
     {
-        // Update the parent's value through the state service
-        StateService.UpdateValue(LocalValue);
-    }
+        if (OnLocalValueChanged.HasDelegate)
+        {
+            await OnLocalValueChanged.InvokeAsync((Index, localValue));
+        }
+    }   
 }

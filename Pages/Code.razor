@@ -1,79 +1,77 @@
 ﻿@page "/code"
-@using HabitusBlazor.Services
-@inject StateService StateService
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
-    <MudCard Elevation="4" Class="mb-4">
-        <MudCardHeader>
-            <MudText Typo="Typo.h4">Parent Component (Level 1)</MudText>
-        </MudCardHeader>
-        <MudCardContent>
-            <MudText Typo="Typo.body1" Class="mb-3">Current Value: <b>@currentValue</b></MudText>
+<div class="pb-xl-5">
+    <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+        <MudCard Elevation="4" Class="parent-card mb-4">
+            <MudCardHeader Class="parent-header">
+                <MudText Typo="Typo.h4">Parent Component (Level 1)</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body1" Class="mb-3">Current Value: <b>@currentValue</b></MudText>
 
-            <MudNumericField @bind-Value="inputValue"
-                             Label="Set Value For All Children"
-                             Variant="Variant.Outlined"
-                             Min="0"
-                             Class="mb-3"
-                             Adornment="Adornment.Start"
-                             AdornmentIcon="@Icons.Material.Filled.Numbers" />
+                <MudNumericField @bind-Value="@inputValue"
+                Label="Set Value For All Children"
+                Variant="Variant.Outlined"
+                Min="0"
+                Class="mb-3"
+                Adornment="Adornment.Start"
+                AdornmentIcon="@Icons.Material.Filled.Numbers" />
 
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       OnClick="UpdateAllChildren"
-                       StartIcon="@Icons.Material.Filled.Update"
-                       Class="mb-3">
-                Update All
-            </MudButton>
-        </MudCardContent>
-    </MudCard>
+                <MudButton Variant="Variant.Filled"
+                Color="Color.Primary"
+                OnClick="UpdateAllChildren"
+                StartIcon="@Icons.Material.Filled.Update"
+                Class="parent-button mb-3">
+                    Update All
+                </MudButton>
+            </MudCardContent>
+        </MudCard>
 
-    <MudGrid>
-        @for (int i = 0; i < 6; i++)
-        {
-            <MudItem xs="12" sm="6" md="4">
-                <HabitusBlazor.Components.SecondLevelComponent Value="@childrenValues[i]" />
-            </MudItem>
-        }
-    </MudGrid>
-</MudContainer>
+
+        <MudItem Class="level2-wrapper">
+            <div class="ribbon-wrapper">
+                <MudText Typo="Typo.h5" Class="ribbon-text">Level 2 Component</MudText>
+            </div>
+
+            <MudGrid Class="child-grid">
+                @for (int i = 0; i < childVals.Length; i++)
+                {
+                    var index = i;
+                    var item = childVals[i];
+                    <MudItem xs="12" sm="6" md="4">
+                        <SecondLevelComponent Value="item"
+                        Index="index"
+                        OnValueChanged="OnChildValueChanged">
+
+                        </SecondLevelComponent>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudItem>
+    </MudContainer>
+</div>
 
 @code {
     private int inputValue = 0;
     private int currentValue = 0;
-    private int[] childrenValues = new int[6] { 0, 0, 0, 0, 0, 0 };
 
-    protected override void OnInitialized()
-    {
-        // Subscribe to value changes from any child component
-        StateService.OnValueChanged += HandleValueChanged;
-        base.OnInitialized();
-    }
-
-    private void HandleValueChanged(int newValue)
-    {
-        // Update the current value when any child updates it
-        currentValue = newValue;
-        StateService.UpdateValue(newValue);
-        StateHasChanged();
-    }
+    private int[] childVals = new int[6] { 0, 0, 0, 0, 0, 0 };
 
     private void UpdateAllChildren()
     {
-        // Update all child values to match the input value
-        for (int i = 0; i < childrenValues.Length; i++)
+        for (int i = 0; i < childVals.Length; i++)
         {
-            childrenValues[i] = inputValue;
+            childVals[i] = inputValue;
         }
-
-        // Also update the current value
         currentValue = inputValue;
-        StateService.UpdateValue(inputValue);
+
+        StateHasChanged();
     }
 
-    public void Dispose()
+    private async Task OnChildValueChanged((int Index, int NewValue) change)
     {
-        // Unsubscribe from the event to prevent memory leaks
-        StateService.OnValueChanged -= HandleValueChanged;
+        childVals[change.Index] = change.NewValue;
+        currentValue = change.NewValue;
+        inputValue = currentValue;
     }
 }

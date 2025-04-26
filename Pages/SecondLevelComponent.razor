@@ -1,15 +1,33 @@
-﻿@namespace HabitusBlazor.Components
+﻿<div>
+    <MudCard Class="second-level-card" Style="background: #ffffff;">
+        <MudCardHeader>
+            <MudText Typo="Typo.h6">Level 3 Component</MudText>
+        </MudCardHeader>
 
-<MudCard Elevation="2" Class="ma-2">
-    <MudCardHeader>
-        <MudText Typo="Typo.h5">Level 2 Component</MudText>
-    </MudCardHeader>
-    <MudCardContent>
-        <ThirdLevelComponent Value="@Value" />
-    </MudCardContent>
-</MudCard>
+        <MudCardContent>
+            <ThirdLevelComponent Value="@Value"
+                                 OnLocalValueChanged="HandleLocalValueChanged"
+                                 Index="@Index">
+            </ThirdLevelComponent>
+        </MudCardContent>
+    </MudCard>
+</div>
 
 @code {
     [Parameter]
     public int Value { get; set; }
+
+    [Parameter]
+    public int Index { get; set; }
+
+    [Parameter]
+    public EventCallback<(int, int)> OnValueChanged { get; set; }
+
+    private async Task HandleLocalValueChanged((int, int) change)
+    {
+        if (OnValueChanged.HasDelegate)
+        {
+            await OnValueChanged.InvokeAsync(change);
+        }
+    }
 }

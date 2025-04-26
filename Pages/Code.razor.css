@@ -1,0 +1,42 @@
+﻿::deep .parent-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+::deep .parent-header {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+::deep .parent-button {
+    margin-top: 1rem;
+}
+
+::deep .child-grid {
+    margin-top: 2rem;
+}
+
+::deep .level2-wrapper {
+    background-color: #eef3f9;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-top: 1rem;
+}
+
+::deep .ribbon-wrapper {
+    position: relative;
+    background: linear-gradient(to right, #3f51b5, #5c6bc0);
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+::deep .ribbon-text {
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
